@@ -56,6 +56,10 @@ class led
     led_color color;
     led_rate rate;
     map <string, led_options_base * > command_map;
+    // The map structure is: a possible command -> due object.
+    // Example:
+    // The command to set led rate to 2 ("set-led-rate 2") split to the command ("set-led-rate") and the argument ("2"). The first - is a Key for the map.
+    // The due object is a rate object of a led_rate class. The pointer to that object (through the base class) is a second value for the map.
 public:
     led ();
     string perform (string );
