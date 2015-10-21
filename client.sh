@@ -15,7 +15,7 @@ done
 
 mkfifo "$fifo_filename"
 
-echo "$fifo_filename" > "$server_fifo" &
+echo "$my_ID" > "$server_fifo" &
 
 continue=true
 
@@ -27,7 +27,9 @@ while ( "$continue" ) do
       continue=false
   fi
   echo "$command" > "$fifo_filename"
-  read response < "$fifo_filename"
+  echo "Reading begin"
+#  read response < "$fifo_filename"
+  response=`cat "$fifo_filename" &` 
   echo "$response"
 done
 
