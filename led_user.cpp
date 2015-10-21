@@ -28,8 +28,15 @@ int led_user::send_message_to_user (int & pipe_description, string message)
 void led_user::terminate (int & pipe_description)
 {
     const string BY_MSG = "By By";
-    send_message_to_user ( pipe_description, BY_MSG );
     close(pipe_description);
+    pipe_description = open (user_interface.c_str(), O_WRONLY);
+    if ( pipe_description == -1 )
+    {
+        cerr << "Can not open user fifo pipe " << user_interface << " for write!" << endl;
+    } else {
+        write(pipe_description, BY_MSG.c_str(), BY_MSG.size() + 1 );
+        close(pipe_description);
+    }
 }
 
 void led_user::activate()

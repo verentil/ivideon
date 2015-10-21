@@ -22,41 +22,64 @@ void accept_new_user(string user_id, led & user_led)
     new_user.activate();
 }
 
-int main()
+bool pipe_initialise ()
 {
-
-    led active_led;
-
     unlink(server_interface.c_str());
 
     if ( mkfifo (server_interface.c_str(), 0666) == -1 )
     {
         cerr << "Can not create fifo pipe " << server_interface << "!" << endl;
-        return 1;
+        return false;
     }
+    return true;
+}
 
-    int fd_fifo = open (server_interface.c_str(), O_RDWR);
+bool pipe_open (int & pipe_description)
+{
+    pipe_description = open (server_interface.c_str(), O_RDONLY);
 
-    if ( fd_fifo == -1 )
+    if ( pipe_description == -1 )
     {
         cerr << "Can not open fifo pipe " << server_interface << "!" << endl;
-        return 1;
+        return false;
     }
+    return true;
+}
+
+bool read_from_pipe (string & response)
+{
+    int pipe_description;
+    if ( ! pipe_open (pipe_description) )
+        return false;
 
     char MSG[MAX_MSG_SIZE];
-
-    int readed_size;
-    while ( ( readed_size = read(fd_fifo, MSG, MAX_MSG_SIZE)) && ( readed_size > 0 ) )
+    int readed_response_size = read(pipe_description, MSG, MAX_MSG_SIZE);
+    if ( readed_response_size > 0 )
+        response = string (MSG, readed_response_size - 1);
+    else
     {
-        cout << "Message readed" << endl;
-        string clean_message = string (MSG, readed_size - 1);
-        cout << clean_message << endl;
-        accept_new_user(clean_message, active_led);
+        close(pipe_description);
+        return false;
     }
 
-    cout << "After reading" << endl;
+    close(pipe_description);
+    return true;
+}
 
-    close(fd_fifo);
+int main()
+{
+
+    led active_led;
+
+    pipe_initialise();
+
+    string new_user_id;
+    while ( read_from_pipe(new_user_id) )
+    {
+        cout << "New connection with user ID: " << new_user_id << endl;
+        accept_new_user(new_user_id, active_led);
+        cout << "User connection terminated (ID: " << new_user_id << ")" << endl;
+    }
 
     return 0;
 }
