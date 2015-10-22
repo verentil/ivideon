@@ -4,7 +4,7 @@ project(ivideon)
 
 set(SOURCE_EXE main.cpp)
 
-set(SOURCE_LIB led.cpp led_user.cpp)
+set(SOURCE_LIB led.cpp led_user.cpp fifo_pipe.cpp)
 
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
