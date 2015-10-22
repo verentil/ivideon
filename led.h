@@ -1,6 +1,8 @@
 #ifndef IVIDEON_LED_H
 #define IVIDEON_LED_H
 
+#include <boost/thread.hpp>
+#include <boost/thread/lock_guard.hpp>
 #include <map>
 #include <set>
 #include <sstream>
@@ -24,17 +26,20 @@ public:
 template <int option_number>
 class led_options_template : public led_options_base
 {
+    boost::mutex changing_option;
     static const std::set<string> possible_value;
     string value = *possible_value.begin();
 public:
     string get ()
     {
+        boost::lock_guard<boost::mutex> lock(changing_option);
         return SUCCESS_RESPONSE + " " + value;
     }
     string set ( string new_value )
     {
         if ( possible_value.count(new_value) > 0 )
         {
+            boost::lock_guard<boost::mutex> lock(changing_option);
             value = new_value;
             return SUCCESS_RESPONSE;
         }
@@ -63,6 +68,7 @@ class led
 public:
     led ();
     string perform (string );
+    string get_possible_commands();
     ~led () {};
 };
 

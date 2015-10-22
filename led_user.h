@@ -17,6 +17,7 @@ class timeout_inspector;
 
 class led_user
 {
+    static const string welcome_message;
     string user_id;
     string user_interface;
     led * user_led;
@@ -32,6 +33,10 @@ public:
         user_led = active_led;
         user_interface = WORKING_DIRECTORY + user_id;
         user_pipe = unique_ptr<fifo_pipe> ( new fifo_pipe ( user_interface ) );
+        string first_message = welcome_message +
+                               "Correct command list:\n" +
+                               user_led->get_possible_commands() + "\n";
+        user_pipe->write_message(first_message);
     };
     ~led_user(){};
     void activate (timeout_inspector &);

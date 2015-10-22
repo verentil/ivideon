@@ -43,3 +43,12 @@ string led::perform ( string command_and_argument )
     }
     return FAIL_RESPONSE;
 }
+
+string led::get_possible_commands()
+{
+    string possible_commands = "";
+    for (auto command : command_map)
+        possible_commands += command.first + " ";
+    return possible_commands;
+}
+

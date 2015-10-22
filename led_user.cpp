@@ -1,6 +1,8 @@
 #include "led_user.h"
 #include "timeout_inspector.h"
 
+const string led_user::welcome_message = "Welcome to led management interface!\n";
+
 void led_user::terminate()
 {
     const string BY_MSG = "By By";
