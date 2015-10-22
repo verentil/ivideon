@@ -26,7 +26,7 @@ while ( "$continue" ) do
     then
       continue=false
   fi
-  echo "$command" > "$fifo_filename"
+  echo "$command" > "$fifo_filename" &
   echo "Reading begin"
 #  read response < "$fifo_filename"
   response=`cat "$fifo_filename" &` 

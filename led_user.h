@@ -1,23 +1,19 @@
 #ifndef IVIDEON_LEDUSER_H
 #define IVIDEON_LEDUSER_H
 
-#include <fcntl.h>
 #include <iostream>
 #include <memory>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #include "fifo_pipe.h"
 #include "led.h"
 
-using std::cerr;
-using std::endl;
 using std::unique_ptr;
 
 extern const string WORKING_DIRECTORY;
 extern const int MAX_MSG_SIZE;
 extern const string EXIT_COMMAND;
+
+class timeout_inspector;
 
 class led_user
 {
@@ -25,6 +21,8 @@ class led_user
     string user_interface;
     led * user_led;
     unique_ptr<fifo_pipe> user_pipe;
+    friend timeout_inspector;
+    bool disconnected = false;
     void terminate();
     led_user(){};
 public:
@@ -36,7 +34,7 @@ public:
         user_pipe = unique_ptr<fifo_pipe> ( new fifo_pipe ( user_interface ) );
     };
     ~led_user(){};
-    void activate ();
+    void activate (timeout_inspector &);
 };
 
 #endif // IVIDEON_LEDUSER_H
