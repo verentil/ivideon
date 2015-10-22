@@ -1,11 +1,11 @@
 #include "led_user.h"
 #include "timeout_inspector.h"
 
-const string led_user::welcome_message = "Welcome to led management interface!\n";
+const string led_user::WELCOME_MESSAGE = "Welcome to led management interface!\n";
 
 void led_user::terminate()
 {
-    const string BY_MSG = "By By";
+    const string BY_MSG = "Bye Bye";
     user_pipe->write_message( BY_MSG );
 }
 
@@ -25,7 +25,7 @@ void led_user::activate(timeout_inspector & inspector)
             break;
         }
         inspector.renew (this);
-        string response = user_led->perform(command);
+        string response = user_led->perform( command );
         user_pipe->write_message( response );
     }
 }

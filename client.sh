@@ -1,11 +1,11 @@
 #!/bin/bash
-#Client script for manage the led.
+#Client script for manage the LED.
 
 working_directory="/tmp/"
 server_fifo="/tmp/led_server"
 exit_command="exit"
 
-my_ID=`date +%s`
+my_ID=`date +%s`				# User's unique ID. It is elapsed seconds since 1970-01-01 00:00:00 UTC till this command execution.
 fifo_filename="$working_directory""$my_ID"
 
 while ( [ -f "$fifo_filename" ] ) do
@@ -29,7 +29,6 @@ continue=true
 
 while ( "$continue" ) do
   read command
-#  echo "$command "
   if [ "$command" == "$exit_command" ]
     then
       continue=false

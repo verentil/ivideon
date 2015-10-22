@@ -29,10 +29,16 @@ int main()
     led active_led;
 
     fifo_pipe server_pipe(SERVER_INTERFACE);
+    // The initial server interface.
+    // Users send their unique ID to begin communication.
+    // Further communication going throug unique pipe at working directory based on user ID.
+    // Example:
+    // Let ID is "1445529801", working directory is "/tmp/". Then unique file for pipe is "/tmp/1445529801"
 
     server_pipe.initialise();
 
     timeout_inspector inspector;
+    // The main inspector. Control all users.
 
     thread inspector_thread ( boost::bind( &timeout_inspector::trace, &inspector ) );
     inspector_thread.detach();
@@ -44,7 +50,7 @@ int main()
 
         thread * user_thread = new thread( &accept_new_user, new_user_id, boost::ref(active_led), boost::ref(inspector) );
 
-        usleep(10000);		// Time delay for correct thread initialisation.
+        usleep(10000);			// Time delay for correct thread initialisation.
 
         user_thread->detach();
     }

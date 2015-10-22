@@ -7,7 +7,7 @@ void timeout_inspector::trace ()
 {
     while (true)
     {
-        usleep(1000000);		 // sleep for 1000000mcs = 1s
+        usleep(1000000);		 				// sleep for 1000000mcs = 1s
         boost::lock_guard<boost::mutex> lock(change_connections);
         for ( auto user : connections )
         {
@@ -21,7 +21,7 @@ void timeout_inspector::trace ()
 void timeout_inspector::terminate_connection ( led_user * user )
 {
     user->disconnected = true;
-    user->user_pipe->write_message( EXIT_COMMAND );
+    user->user_pipe->write_message( EXIT_COMMAND );			// Send message for canceling waiting news from user at loop of "led_user::activate" function.
 }
 
 

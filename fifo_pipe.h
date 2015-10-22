@@ -14,10 +14,11 @@ using std::endl;
 using std::string;
 
 class fifo_pipe
+// Comfortable class for working with FIFO pipe.
 {
     string pipe_file;
     int pipe_description;
-    fifo_pipe(){};
+    fifo_pipe(){};				// Class must have the file for FIFO pipe.
     void fifo_close()
     {
         close(pipe_description);
@@ -28,7 +29,7 @@ public:
     ~fifo_pipe(){};
     int read_message (string &);
     void write_message (string);
-    bool initialise();
+    bool initialise();				// This method recreate the file for FIFO pipe.
 };
 
 #endif // IVIDEON_FIFOPIPE_H

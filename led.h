@@ -17,6 +17,7 @@ extern const string SUCCESS_RESPONSE;
 extern const string FAIL_RESPONSE;
 
 class led_options_base
+// Abstract class. Descripes led option interface.
 {
 public:
     virtual string get () = 0;
@@ -25,6 +26,9 @@ public:
 
 template <int option_number>
 class led_options_template : public led_options_base
+// Template class for led options. Defines an interface.
+// The options scaling is obtained by specialisations of this class. 
+// For this purpose created enum "led_options".
 {
     boost::mutex changing_option;
     static const std::set<string> possible_value;
